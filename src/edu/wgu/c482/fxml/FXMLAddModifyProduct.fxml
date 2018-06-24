@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="1193.0" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wgu.c482.controllers.FXMLAddModifyProductController">
+  <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="286.0" minWidth="0.0" prefWidth="0.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1118.0" minWidth="10.0" prefWidth="554.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="748.0" minWidth="10.0" prefWidth="577.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="218.0" minWidth="0.0" prefWidth="0.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="158.0" minHeight="0.0" prefHeight="64.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="555.0" minHeight="10.0" prefHeight="304.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="138.0" minHeight="0.0" prefHeight="53.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <VBox prefHeight="384.0" prefWidth="106.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <children>
+            <HBox prefHeight="37.0" prefWidth="597.0">
+               <children>
+                  <Label prefHeight="27.0" prefWidth="87.0" text="Parts">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font></Label>
+                  <Button fx:id="partSearchButton" mnemonicParsing="false" onAction="#searchParts" prefHeight="25.0" prefWidth="82.0" text="Search">
+                     <HBox.margin>
+                        <Insets left="100.0" />
+                     </HBox.margin></Button>
+                  <TextField fx:id="partsFilter" prefHeight="25.0" prefWidth="337.0">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin></TextField>
+               </children>
+               <VBox.margin>
+                  <Insets left="10.0" right="10.0" top="10.0" />
+               </VBox.margin>
+               <opaqueInsets>
+                  <Insets top="4.0" />
+               </opaqueInsets>
+            </HBox>
+            <TableView fx:id="partsTable" prefHeight="570.0" prefWidth="572.0">
+              <columns>
+                <TableColumn fx:id="partIDColumn" prefWidth="136.0" text="Part ID" />
+                <TableColumn fx:id="partNameColumn" prefWidth="187.0" text="Part Name" />
+                  <TableColumn fx:id="partInvColumn" prefWidth="149.0" text="Inventory Level" />
+                  <TableColumn fx:id="partPriceColumn" prefWidth="124.0" text="Price/Cost per Unit" />
+              </columns>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </VBox.margin>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </TableView>
+            <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="1.0">
+               <children>
+                  <Button fx:id="addPartsButton" mnemonicParsing="false" onAction="#addPartModal" prefHeight="25.0" prefWidth="54.0" text="Add">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin></Button>
+                  <Button mnemonicParsing="false" onAction="#modifyPartModal" prefHeight="25.0" prefWidth="65.0" text="Modify">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin></Button>
+                  <Button mnemonicParsing="false" onAction="#deletePart" prefHeight="25.0" prefWidth="62.0" text="Delete">
+                     <HBox.margin>
+                        <Insets left="10.0" right="50.0" />
+                     </HBox.margin>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets></Button>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" />
+               </VBox.margin>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </HBox>
+         </children>
+      </VBox>
+      <VBox prefHeight="532.0" prefWidth="581.0" style="-fx-border-color: black;" GridPane.columnIndex="2" GridPane.rowIndex="1">
+         <children>
+            <HBox prefHeight="36.0" prefWidth="596.0">
+               <children>
+                  <Label prefHeight="35.0" prefWidth="153.0" text="Products">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font></Label>
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Search">
+                     <HBox.margin>
+                        <Insets left="100.0" />
+                     </HBox.margin></Button>
+                  <TextField prefHeight="25.0" prefWidth="330.0">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin></TextField>
+               </children>
+               <VBox.margin>
+                  <Insets left="10.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </HBox>
+            <TableView fx:id="productsTable" prefHeight="570.0" prefWidth="572.0">
+              <columns>
+                <TableColumn fx:id="productIDColumn" prefWidth="75.0" text="Product ID" />
+                <TableColumn fx:id="productNameColumn" prefWidth="75.0" text="Product Name" />
+                  <TableColumn fx:id="productInvColumn" prefWidth="75.0" text="Inventory Level" />
+                  <TableColumn fx:id="productPriceColumn" prefWidth="75.0" text="Price per Unit" />
+              </columns>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </TableView>
+            <HBox alignment="BOTTOM_RIGHT" prefHeight="22.0" prefWidth="571.0">
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="61.0" text="Add">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin></Button>
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Modify">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin></Button>
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Delete">
+                     <HBox.margin>
+                        <Insets left="10.0" right="50.0" />
+                     </HBox.margin></Button>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+      <HBox alignment="CENTER_RIGHT" prefHeight="0.0" prefWidth="587.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+         <children>
+            <Button mnemonicParsing="false" onAction="#exit" prefHeight="25.0" prefWidth="61.0" text="Exit" GridPane.columnIndex="2" GridPane.rowIndex="2">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </Button>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets right="30.0" />
+         </padding>
+      </HBox>
+      <Label prefHeight="35.0" prefWidth="374.0" text="Inventory Management System" GridPane.columnIndex="1">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+   </children>
+</GridPane>
