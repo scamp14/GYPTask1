@@ -10,10 +10,13 @@ import edu.wgu.c482.model.Outsourced;
 import edu.wgu.c482.model.Part;
 import edu.wgu.c482.service.Inventory;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -51,15 +54,21 @@ public class FXMLAddModifyPartController implements Initializable {
     private TextField max;
     @FXML
     private TextField min;
-    
+
     @FXML
     private ToggleGroup partToggleGroup;
-    
+
     @FXML
     private RadioButton radioInhouse;
-   
+
     @FXML
     private RadioButton radioOutsourced;
+
+    @FXML
+    private Part part;
+
+    @FXML
+    private Stage stage;
 
     public RadioButton getRadioInhouse() {
         return radioInhouse;
@@ -77,229 +86,218 @@ public class FXMLAddModifyPartController implements Initializable {
         this.radioOutsourced = radioOutsourced;
     }
 
-    @FXML
-    private Part part;
-
-    @FXML
-    Stage stage;
-    
-    
-
-    public Stage getStage() {
+    private Stage getStage() {
         return stage;
     }
 
-    public Label getCompanyNameLabel() {
+    private Label getCompanyNameLabel() {
         return companyNameLabel;
     }
 
-    public void setCompanyNameLabel(Label companyNameLabel) {
+    private void setCompanyNameLabel(Label companyNameLabel) {
         this.companyNameLabel = companyNameLabel;
     }
 
-    public TextField getCompanyName() {
+    private TextField getCompanyName() {
         return companyName;
     }
 
-    public void setCompanyName(TextField companyName) {
+    private void setCompanyName(TextField companyName) {
         this.companyName = companyName;
     }
 
-    public Label getMachineIdLabel() {
+    private Label getMachineIdLabel() {
         return machineIdLabel;
     }
 
-    public void setMachineIdLabel(Label machineIdLabel) {
+    private void setMachineIdLabel(Label machineIdLabel) {
         this.machineIdLabel = machineIdLabel;
     }
 
-    public TextField getMachineID() {
+    private TextField getMachineID() {
         return machineID;
     }
 
-    public void setMachineID(TextField machineID) {
+    private void setMachineID(TextField machineID) {
         this.machineID = machineID;
     }
 
-    public TextField getId() {
+    private TextField getId() {
         return id;
     }
 
-    public void setId(TextField id) {
+    private void setId(TextField id) {
         this.id = id;
     }
 
-    public TextField getName() {
+    private TextField getName() {
         return name;
     }
 
-    public void setName(TextField name) {
+    private void setName(TextField name) {
         this.name = name;
     }
 
-    public TextField getInventory() {
+    private TextField getInventory() {
         return inventory;
     }
 
-    public void setInventory(TextField inventory) {
+    private void setInventory(TextField inventory) {
         this.inventory = inventory;
     }
 
-    public TextField getPrice() {
+    private TextField getPrice() {
         return price;
     }
 
-    public void setPrice(TextField price) {
+    private void setPrice(TextField price) {
         this.price = price;
     }
 
-    public TextField getMax() {
+    private TextField getMax() {
         return max;
     }
 
-    public void setMax(TextField max) {
+    private void setMax(TextField max) {
         this.max = max;
     }
 
-    public TextField getMin() {
+    private TextField getMin() {
         return min;
     }
 
-    public void setMin(TextField min) {
+    private void setMin(TextField min) {
         this.min = min;
     }
 
-    public ToggleGroup getPartToggleGroup() {
+    private ToggleGroup getPartToggleGroup() {
         return partToggleGroup;
     }
 
-    public void setPartToggleGroup(ToggleGroup partToggleGroup) {
+    private void setPartToggleGroup(ToggleGroup partToggleGroup) {
         this.partToggleGroup = partToggleGroup;
     }
 
-
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        //No Operation
     }
 
-    /**
-     * Initializes the controller class.
-     */
     @FXML
     private void save() {
         RadioButton rb = (RadioButton) partToggleGroup.getSelectedToggle();
         String type = rb.getText();
         Part part = this.getPart();
         if (part != null) {
-            
+            /**
+             * Update Existing Part
+             */
             if ("In-House".equals(type)) {
 
-                part = new Inhouse(Integer.parseInt(machineID.textProperty().getValue()),
-                        part.getPartID(), this.name.getText(), Double.parseDouble(price.getText()),
-                        Integer.parseInt(inventory.getText()),
-                        Integer.parseInt(min.getText()), Integer.parseInt(max.getText()));
+                part = new Inhouse(Integer.parseInt(this.getMachineID().getText()),
+                        part.getPartID(), this.getName().getText(), Double.parseDouble(this.getPrice().getText()),
+                        Integer.parseInt(this.getInventory().getText()),
+                        Integer.parseInt(this.getMin().getText()), Integer.parseInt(this.getMax().getText()));
 
             } else if ("Outsourced".equals(type)) {
-                part = new Outsourced(companyName.getText(),
-                        part.getPartID(), this.name.getText(), Double.parseDouble(price.getText()),
-                        Integer.parseInt(inventory.getText()),
-                        Integer.parseInt(min.getText()), Integer.parseInt(max.getText()));
+                part = new Outsourced(this.getCompanyName().getText(),
+                        part.getPartID(), this.getName().getText(), Double.parseDouble(this.getPrice().getText()),
+                        Integer.parseInt(this.getInventory().getText()),
+                        Integer.parseInt(this.getMin().getText()), Integer.parseInt(this.getMax().getText()));
             }
-            /*
-            TextField field = this.getName();
-            part.setName(field.getText());
-            field = this.getInventory();
-            part.setInStock(Integer.parseInt(field.getText()));
-            field = this.getPrice();
-            part.setPrice(Double.parseDouble(field.getText()));
-            field = this.getMax();
-            part.setMax(Integer.parseInt(field.getText()));
-            field = this.getMin();
-            part.setMin(Integer.parseInt(field.getText()));
-            if (part instanceof Inhouse) {
-            field = this.getMachineID();
-            ((Inhouse) part).setMachineId(Integer.parseInt(field.getText()));
-            } else if (part instanceof Outsourced) {
-                field = this.getCompanyName();
-                ((Outsourced) part).setCompanyName(field.getText());
-            }
-            */
-            
-            
-            
             inventoryService.updatePart(part);
         } else {
+            /**
+             * Add New Part
+             */
             if ("In-House".equals(type)) {
 
-                part = new Inhouse(Integer.parseInt(machineID.textProperty().getValue()),
-                        -1, this.name.getText(), Double.parseDouble(price.getText()),
-                        Integer.parseInt(inventory.getText()),
-                        Integer.parseInt(min.getText()), Integer.parseInt(max.getText()));
+                part = new Inhouse(Integer.parseInt(this.getMachineID().getText()),
+                        -1, this.getName().getText(), Double.parseDouble(this.getPrice().getText()),
+                        Integer.parseInt(this.getInventory().getText()),
+                        Integer.parseInt(this.getMin().getText()), Integer.parseInt(this.getMax().getText()));
 
             } else if ("Outsourced".equals(type)) {
-                part = new Outsourced(companyName.getText(),
-                        -1, this.name.getText(), Double.parseDouble(price.getText()),
-                        Integer.parseInt(inventory.getText()),
-                        Integer.parseInt(min.getText()), Integer.parseInt(max.getText()));
+                part = new Outsourced(this.getCompanyName().getText(),
+                        -1, this.getName().getText(), Double.parseDouble(this.getPrice().getText()),
+                        Integer.parseInt(this.getInventory().getText()),
+                        Integer.parseInt(this.getMin().getText()), Integer.parseInt(this.getMax().getText()));
             }
-
-            System.out.println(part.toString());
             inventoryService.addPart(part);
         }
 
+        /**
+         * Close the Add/Modify Part screen and return to the Main Screen.
+         */
         Stage stage = this.getStage();
         stage.close();
     }
 
     @FXML
     private void disableMachineIdField(ActionEvent event) {
-
-        this.companyName.setDisable(false);
-        this.companyNameLabel.setDisable(false);
-        this.machineID.setDisable(true);
-        this.machineIdLabel.setDisable(true);
+        this.getCompanyName().setDisable(false);
+        this.getCompanyNameLabel().setDisable(false);
+        this.getMachineID().setDisable(true);
+        this.getMachineIdLabel().setDisable(true);
     }
 
     @FXML
     private void disableCompanyNameField(ActionEvent event) {
-        this.companyName.setDisable(true);
-        this.companyNameLabel.setDisable(true);
-        this.machineID.setDisable(false);
-        this.machineIdLabel.setDisable(false);
+        this.getCompanyName().setDisable(true);
+        this.getCompanyNameLabel().setDisable(true);
+        this.getMachineID().setDisable(false);
+        this.getMachineIdLabel().setDisable(false);
     }
 
+    /**
+     * This returns the main label of the Add/Modify Parts screen. This is used
+     * by the main controller.
+     *
+     * @return
+     */
     public Label getMainLabel() {
         return mainLabel;
     }
 
-    public void setMainLabel(Label mainLabel) {
-        System.out.println("set main lable " + mainLabel.getText());
+    private void setMainLabel(Label mainLabel) {
         this.mainLabel = mainLabel;
     }
 
-    void setInventoryService(Inventory inventoryService) {
+    /**
+     * This sets the Inventory service for this controller.
+     *
+     * @param inventoryService
+     */
+    public void setInventoryService(Inventory inventoryService) {
         this.inventoryService = inventoryService;
     }
 
-    public Inventory getInventoryService() {
+    private Inventory getInventoryService() {
         return inventoryService;
     }
 
-    void setPart(Part part) {
+    /**
+     * This sets Part that is used in the Add/Modify Part screens.
+     *
+     * @param part
+     */
+    public void setPart(Part part) {
         this.part = part;
     }
 
-    public Part getPart() {
+    private Part getPart() {
         return part;
     }
 
-    void initialize() {
+    /**
+     *
+     * This initializes the Add/Modify Part screens
+     */
+    public void initialize() {
         Part part = this.getPart();
-
+        /**
+         * Populate the TextFields and Radio Buttons with Part data.
+         */
         if (part != null) {
             RadioButton rbInhouse = this.getRadioInhouse();
             RadioButton rbOutsourced = this.getRadioOutsourced();
@@ -314,35 +312,42 @@ public class FXMLAddModifyPartController implements Initializable {
             field = this.getMax();
             field.setText(String.valueOf(part.getMax()));
             field = this.getMin();
-            field.setText(String.valueOf(part.getMin()));         
+            field.setText(String.valueOf(part.getMin()));
             if (part instanceof Inhouse) {
                 field = this.getMachineID();
-                field.setText(String.valueOf(((Inhouse)part).getMachineId()));
+                field.setText(String.valueOf(((Inhouse) part).getMachineId()));
                 this.disableCompanyNameField(null);
-                
                 rbInhouse.setSelected(true);
-                //rbInhouse.setDisable(true); 
-                //rbOutsourced.setDisable(true);
             }
             if (part instanceof Outsourced) {
                 field = this.getCompanyName();
                 field.setText(((Outsourced) part).getCompanyName());
                 this.disableMachineIdField(null);
                 rbOutsourced.setSelected(true);
-                //rbOutsourced.setDisable(true); 
-                //rbInhouse.setDisable(true);
             }
         }
-
     }
 
     @FXML
     private void cancel() {
-        Stage stage = this.getStage();
-        stage.close();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Confirm Cancel");
+        alert.setContentText("Are you sure?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            Stage stage = this.getStage();
+            stage.close();
+        }
     }
 
-    void setStage(Stage stage) {
+    /**
+     * This sets the Stage that is used in cancel and exit operations.
+     *
+     * @param stage
+     */
+    public void setStage(Stage stage) {
         this.stage = stage;
     }
 

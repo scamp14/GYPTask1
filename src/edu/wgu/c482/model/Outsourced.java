@@ -17,23 +17,11 @@ public class Outsourced extends Part{
         this.companyName = companyName;
     }
 
-    
     public String getCompanyName() {
         return companyName;
     }
-
    
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
     }
-
-    
-    /*int getMachineId() {
-        throw new UnsupportedOperationException("Not supported for Outsourced Part.");
-    }
-
-     
-    void setMachineId(int machineId) {
-        throw new UnsupportedOperationException("Not supported for Outsourced Part.");
-    }*/
 }

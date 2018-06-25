@@ -26,6 +26,14 @@ public class Product {
     
     private int max;
 
+    public ArrayList getAssociatedParts() {
+        return associatedParts;
+    }
+
+    public void setAssociatedParts(ArrayList associatedParts) {
+        this.associatedParts = associatedParts;
+    }
+
     public Product(ArrayList associatedParts, int productID, String name, double price, int inStock, int min, int max) {
         this.associatedParts = associatedParts;
         this.productID = productID;

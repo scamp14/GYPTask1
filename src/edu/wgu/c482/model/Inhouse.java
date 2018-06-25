@@ -16,16 +16,6 @@ public class Inhouse extends Part{
         super(partID, name, price, inStock, min, max);
         this.machineId = machineId;
     }
-
-   
-    /*public String getCompanyName() {
-        throw new UnsupportedOperationException("Not supported for InHouse Part."); 
-    }
-
-   
-    public void setCompanyName(String companyName) {
-        throw new UnsupportedOperationException("Not supported for InHouse Part."); 
-    }*/
      
     public int getMachineId() {
         return this.machineId;

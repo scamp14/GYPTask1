@@ -79,18 +79,5 @@ public abstract class Part {
         this.min = min;
         this.max = max;
     }
-    
-    /*
-    *I added these abstract methods here so that I could refer 
-    *Inhouse and Outsourced abstractly by Part class. Consider removing if not needed. it may not be...
-    */
-    /*abstract int getMachineId();
-
-    abstract void setMachineId(int machineId);
-    
-    abstract String getCompanyName();
-
-    abstract void setCompanyName(String companyName);
-    */
 
 }

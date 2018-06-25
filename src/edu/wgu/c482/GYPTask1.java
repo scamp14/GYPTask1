@@ -27,12 +27,14 @@ import javafx.stage.Stage;
  * @author scott
  */
 public class GYPTask1 extends Application {
-    
+   
     @Override
     public void start(Stage stage) throws Exception {
         
        
-       //Seed the Inventory
+        /**
+         * This is a list of parts data used to seed the Inventory.
+         */
         ArrayList allParts = new ArrayList() {
             {
                 //Inhouse
@@ -45,30 +47,40 @@ public class GYPTask1 extends Application {
             }
         };
 
-        
+        /**
+         * This is a list of product data used to seed the Inventory.
+         */
         ArrayList products = new ArrayList() {
             {
                 add(
-                        new Product(new ArrayList() {{add(allParts.get(0));add(allParts.get(3));}}, 1000, "Acme Bundle", 100.00, 2, 1, 12)
+                        new Product(new ArrayList() {{add(allParts.get(0));add(allParts.get(3));}}, 1, "Acme Bundle", 100.00, 2, 1, 12)
                 );
             }
         };
         
-        //Inventory Service
+        /**
+         * This creates a new instance of the Inventory Service
+         */
         Inventory inventoryService = new Inventory(products, allParts);
         
         FXMLLoader rootLoader = new FXMLLoader(getClass().getResource("/edu/wgu/c482/fxml/FXMLMain.fxml"));
         Parent root = rootLoader.load();  
+        
+        /**
+         * This initializes the controller for the main screen of the application.
+         */
         FXMLMainController controller = rootLoader.getController();
         controller.setInventoryService(inventoryService);
         controller.setStage(stage);
         controller.initialize();
+        
         Scene scene = new Scene(root);
-        
         stage.setScene(scene);
-        stage.show();
         
-   
+        /**
+         * Show the main screen of the application. 
+         */
+        stage.show(); 
     }
 
     /**

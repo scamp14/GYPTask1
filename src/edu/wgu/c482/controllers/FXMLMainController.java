@@ -5,17 +5,13 @@
  */
 package edu.wgu.c482.controllers;
 
-import edu.wgu.c482.controllers.FXMLAddModifyPartController;
 import edu.wgu.c482.model.Part;
+import edu.wgu.c482.model.Product;
 import edu.wgu.c482.service.Inventory;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
@@ -24,7 +20,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -76,43 +75,54 @@ public class FXMLMainController implements Initializable {
     private TextField partsFilter;
 
     @FXML
-    private Button partSearchButton;
+    private TextField productsFilter;
 
+    @FXML
+    private Button partSearchButton;
+    @FXML
     private TextField partSearchTerm = new TextField();
-    
+    @FXML
+    private TextField productSearchTerm = new TextField();
+    @FXML
     Stage stage;
+
     @FXML
     private Button addPartsButton;
 
-    public Stage getStage() {
+    private Stage getStage() {
         return stage;
     }
 
+    /**
+     * This sets the Stage that is used in cancel and exit operations.
+     *
+     * @param stage
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
-    public TextField getPartSearchTerm() {
+    private TextField getPartSearchTerm() {
         return this.partSearchTerm;
     }
 
-    public void setPartSearchTerm(TextField partSearchTerm) {
+    private void setPartSearchTerm(TextField partSearchTerm) {
         this.partSearchTerm = partSearchTerm;
     }
 
-    public Button getPartSearchButton() {
+    private Button getPartSearchButton() {
         return partSearchButton;
     }
 
-    public void setPartSearchButton(Button partSearchButton) {
+    private void setPartSearchButton(Button partSearchButton) {
         this.partSearchButton = partSearchButton;
     }
 
-    public TextField getPartsFilter() {
+    private TextField getPartsFilter() {
         return partsFilter;
     }
 
-    public void setPartsFilter(TextField partsFilter) {
+    private void setPartsFilter(TextField partsFilter) {
         this.partsFilter = partsFilter;
     }
 
@@ -121,72 +131,147 @@ public class FXMLMainController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        //No operation.
     }
 
+    /**
+     * This initializes the main screen
+     */
     public void initialize() {
-        //initialize
+        //initialize tables
         this.initializePartsTable();
         this.initializeProductsTable();
     }
 
     private void showPartModal(ActionEvent event, Part part) throws Exception {
-        System.out.println("You clicked me!" + event.toString());
-
         Button button = (Button) event.getSource();
-
-        Stage modalStage = new Stage();
+        String title = button.getText() + " Part";
         FXMLLoader modalLoader = new FXMLLoader(getClass().getResource("/edu/wgu/c482/fxml/FXMLAddModifyPart.fxml"));
         Parent modalRoot = modalLoader.load();
+        Stage modalStage = new Stage();
+
+        /**
+         * This initializes the controller for the Add/Modify Part screens of
+         * the application.
+         */
         FXMLAddModifyPartController modalController = modalLoader.getController();
-        String title = button.getText() + " Part";
         Label mainLabel = modalController.getMainLabel();
         mainLabel.setText(title);
-        //get selected part and setPart in controller. 
         modalController.setInventoryService(this.getInventoryService());
         modalController.setPart(part);
-
         modalStage.setScene(new Scene(modalRoot));
         modalStage.setTitle(title);
         modalStage.initModality(Modality.APPLICATION_MODAL);
         modalController.setStage(modalStage);
         modalController.initialize();
-        //modalStage.initOwner(btn1.getScene().getWindow());
+
+        /**
+         * Show the applicable Add/Modify Part screen of the application.
+         */
         modalStage.showAndWait();
 
     }
 
     @FXML
-    public void addPartModal(ActionEvent event) throws Exception {
+    private void addPartModal(ActionEvent event) throws Exception {
         this.showPartModal(event, null);
     }
 
     @FXML
-    public void modifyPartModal(ActionEvent event) throws Exception {
+    private void modifyPartModal(ActionEvent event) throws Exception {
         TableView<Part> table = this.getPartsTable();
         Part part = table.getSelectionModel().getSelectedItem();
         this.showPartModal(event, part);
     }
 
     @FXML
-    public void deletePart(ActionEvent event) throws Exception {
-        TableView<Part> table = this.getPartsTable();
-        Part part = table.getSelectionModel().getSelectedItem();
-        Inventory service = this.getInventoryService();
-        service.deletePart(part);    
+    private void deletePart(ActionEvent event) throws Exception {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Confirm Delete");
+        alert.setContentText("Are you sure?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            TableView<Part> table = this.getPartsTable();
+            Part part = table.getSelectionModel().getSelectedItem();
+            Inventory service = this.getInventoryService();
+            service.deletePart(part);
+        }
     }
 
     @FXML
-    private void exit(){
-       this.getStage().close();
+    private void deleteProduct(ActionEvent event) throws Exception {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Confirm Delete");
+        alert.setContentText("Are you sure?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            TableView<Product> table = this.getProductsTable();
+            Product product = table.getSelectionModel().getSelectedItem();
+            Inventory service = this.getInventoryService();
+            service.removeProduct(product.getProductID());
+        }
     }
-            
-            
+
+    private void showProductModal(ActionEvent event, Product product) throws Exception {
+        Button button = (Button) event.getSource();
+        String title = button.getText() + " Product";
+        FXMLLoader modalLoader = new FXMLLoader(getClass().getResource("/edu/wgu/c482/fxml/FXMLAddModifyProduct.fxml"));
+        Parent modalRoot = modalLoader.load();
+        Stage modalStage = new Stage();
+
+        /**
+         * This initializes the controller for the Add/Modify Product screens of
+         * the application.
+         */
+        FXMLAddModifyProductController modalController = modalLoader.getController();
+        Label mainLabel = modalController.getMainLabel();
+        mainLabel.setText(title);
+        modalController.setInventoryService(this.getInventoryService());
+        modalController.setProduct(product);
+        modalStage.setScene(new Scene(modalRoot));
+        modalStage.setTitle(title);
+        modalStage.initModality(Modality.APPLICATION_MODAL);
+        modalController.setStage(modalStage);
+        modalController.initialize();
+
+        /**
+         * Show the applicable Add/Modify Product screen of the application.
+         */
+        modalStage.showAndWait();
+
+    }
+
+    @FXML
+    private void addProductModal(ActionEvent event) throws Exception {
+        this.showProductModal(event, null);
+    }
+
+    @FXML
+    private void modifyProductModal(ActionEvent event) throws Exception {
+        TableView<Product> table = this.getProductsTable();
+        Product product = table.getSelectionModel().getSelectedItem();
+        this.showProductModal(event, product);
+    }
+
+    @FXML
+    private void exit() {
+        this.getStage().close();
+    }
+
+    /**
+     * This sets the Inventory service for this controller.
+     *
+     * @param inventoryService
+     */
     public void setInventoryService(Inventory inventoryService) {
         this.inventoryService = inventoryService;
     }
 
-    public Inventory getInventoryService() {
+    private Inventory getInventoryService() {
         return inventoryService;
     }
 
@@ -240,8 +325,9 @@ public class FXMLMainController implements Initializable {
     }
 
     private void initializeProductsTable() {
-        Inventory service = this.getInventoryService();
-        ObservableList<Part> list = FXCollections.observableArrayList(service.getProducts());
+        /**
+         * columns
+         */
         TableColumn productIdCol = this.getProductIDColumn();
         productIdCol.setCellValueFactory(new PropertyValueFactory<>("productID"));
 
@@ -254,59 +340,104 @@ public class FXMLMainController implements Initializable {
         TableColumn productPriceCol = this.getProductPriceColumn();
         productPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
+        /**
+         * service
+         */
+        Inventory service = this.getInventoryService();
+        ObservableList<Product> list = service.getProducts();
+
+        /**
+         * This provides the filter functionality for the Product table of the
+         * main screen.
+         */
+        FilteredList<Product> filteredList = new FilteredList<>(list, p -> true);
+        TextField searchTerm = this.getProductSearchTerm();
+        searchTerm.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            filteredList.setPredicate(product -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+                if (product.getName().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                } else if ((String.valueOf(product.getProductID()).toLowerCase()).contains(lowerCaseFilter)) {
+                    return true;
+                } else if (String.valueOf(product.getInStock()).toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                } else if (String.valueOf(product.getPrice()).toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                }
+                return false;
+            });
+        });
+
+        /**
+         * Populate the products table with data.
+         */
         TableView table = this.getProductsTable();
-        table.setItems(list);
+        table.setItems(filteredList);
     }
 
     @FXML
     private void searchParts() {
-
-        System.out.println(" search Parts");
         TextField searchTerm = this.getPartSearchTerm();
         TextField partsFilterTextField = this.getPartsFilter();
-
         searchTerm.setText(partsFilterTextField.getText());
     }
 
+    @FXML
+    private void searchProducts() {
+        TextField searchTerm = this.getProductSearchTerm();
+        TextField partsFilterTextField = this.getProductsFilter();
+        searchTerm.setText(partsFilterTextField.getText());
+    }
 
-    public TableView getPartsTable() {
+    private TableView getPartsTable() {
         return partsTable;
     }
 
-    public TableColumn getPartIDColumn() {
+    private TableColumn getPartIDColumn() {
         return partIDColumn;
     }
 
-    public TableColumn getPartNameColumn() {
+    private TableColumn getPartNameColumn() {
         return partNameColumn;
     }
 
-    public TableColumn getPartInvColumn() {
+    private TableColumn getPartInvColumn() {
         return partInvColumn;
     }
 
-    public TableColumn getPartPriceColumn() {
+    private TableColumn getPartPriceColumn() {
         return partPriceColumn;
     }
 
-    public TableView getProductsTable() {
+    private TableView getProductsTable() {
         return productsTable;
     }
 
-    public TableColumn getProductIDColumn() {
+    private TableColumn getProductIDColumn() {
         return productIDColumn;
     }
 
-    public TableColumn getProductNameColumn() {
+    private TableColumn getProductNameColumn() {
         return productNameColumn;
     }
 
-    public TableColumn getProductInvColumn() {
+    private TableColumn getProductInvColumn() {
         return productInvColumn;
     }
 
-    public TableColumn getProductPriceColumn() {
+    private TableColumn getProductPriceColumn() {
         return productPriceColumn;
+    }
+
+    private TextField getProductSearchTerm() {
+        return productSearchTerm;
+    }
+
+    private TextField getProductsFilter() {
+        return productsFilter;
     }
 
 }
